@@ -1,0 +1,16 @@
+title: rahinul
+description: AI security, interpretability, and LLM infrastructure — University of Malaya
+author: Md Rahinul Islam Bhuiyan
+email: rahin577@gmail.com
+github_username: cyberjaya101
+
+# Build settings
+markdown: kramdown
+permalink: /blog/:title/
+
+# Exclude from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor

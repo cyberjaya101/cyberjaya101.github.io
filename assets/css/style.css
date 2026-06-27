@@ -1,0 +1,134 @@
+/* ---- colah-inspired portfolio ---- */
+
+:root {
+  --ink: #2b2b2b;
+  --muted: #777;
+  --rule: #e4e4e4;
+  --panel: #f4f4f4;
+  --link: #1a1a1a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--ink);
+  line-height: 1.6;
+  /* blurred nature backdrop behind the white panel */
+  background: #3a4a3a url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1600&q=60")
+              center / cover fixed no-repeat;
+}
+
+/* ---- header ---- */
+.site-header {
+  background: #2b2b2b;
+  color: #ddd;
+}
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.site-title {
+  font-size: 1.5rem;
+  color: #f0f0f0;
+  text-decoration: none;
+  letter-spacing: .3px;
+}
+.site-nav a {
+  color: #d8d8d8;
+  text-decoration: none;
+  margin-left: 28px;
+  font-size: 1.05rem;
+}
+.site-nav a:hover { color: #fff; }
+
+/* ---- centered white panel ---- */
+.panel {
+  max-width: 880px;
+  margin: 34px auto;
+  background: #fdfdfd;
+  padding: 48px 60px;
+  box-shadow: 0 2px 24px rgba(0,0,0,.28);
+  min-height: 60vh;
+}
+
+h1, h2, h3 { font-weight: bold; line-height: 1.25; }
+h1 { font-size: 2.1rem; margin: 0 0 .4em; }
+h2 { font-size: 1.55rem; margin: 1.6em 0 .5em; }
+.lead { font-size: 1.15rem; color: #444; }
+
+a { color: var(--link); }
+.panel a { text-decoration: underline; text-decoration-color: #bbb; }
+.panel a:hover { text-decoration-color: var(--ink); }
+
+/* ---- featured project grid ---- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 26px;
+  margin: 28px 0 10px;
+}
+.card {
+  border: 1px solid #333;
+  border-radius: 3px;
+  background: #fff;
+  padding: 18px 18px 22px;
+  text-decoration: none !important;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow .15s ease, transform .15s ease;
+}
+.card:hover { box-shadow: 0 6px 18px rgba(0,0,0,.18); transform: translateY(-2px); }
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  object-position: top;
+  border: 1px solid #eee;
+  background: #fafafa;
+}
+.card .card-title { text-align: center; font-size: 1.25rem; font-weight: bold; margin: 16px 0 4px; }
+.card .card-sub { text-align: center; font-style: italic; color: var(--muted); font-size: .95rem; }
+.card.flagship { grid-column: 1 / -1; }
+.card.flagship img { height: 220px; object-fit: contain; padding: 16px; }
+
+/* ---- project list ---- */
+.proj-list { list-style: none; padding: 0; }
+.proj-list li { padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.proj-list .name { font-size: 1.2rem; font-weight: bold; }
+.proj-list .desc { color: #555; }
+.proj-list .links a { font-size: .92rem; margin-right: 14px; }
+
+/* ---- blog list ---- */
+.post-list { list-style: none; padding: 0; }
+.post-list li { padding: 16px 0; border-bottom: 1px solid var(--rule); }
+.post-list .post-date { color: var(--muted); font-size: .92rem; }
+.post-title { font-size: 2.2rem; }
+.post-meta { color: var(--muted); margin-top: -.4em; }
+.post-content { margin-top: 1.4em; }
+.post-content img { max-width: 100%; }
+
+/* ---- footer ---- */
+.site-footer {
+  text-align: center;
+  color: #e8e8e8;
+  font-size: .9rem;
+  padding: 24px 16px 40px;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+.site-footer a { color: #fff; }
+
+/* ---- responsive ---- */
+@media (max-width: 720px) {
+  .panel { padding: 30px 22px; margin: 18px 12px; }
+  .grid { grid-template-columns: 1fr; }
+  .header-inner { flex-direction: column; gap: 10px; }
+  .site-nav a { margin: 0 14px; }
+}
