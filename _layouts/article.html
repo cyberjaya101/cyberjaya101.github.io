@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title }} &middot; {{ site.title }}</title>
+  <meta name="description" content="{{ page.description }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <style>
+    /* ---- transformer-circuits / Distill-inspired article ---- */
+    .tc-wrap{ background:#fff; color:#1a1a1a; }
+    .tc{ max-width:684px; margin:0 auto; padding:0 24px;
+         font-family:Georgia,"Hoefler Text","Times New Roman",serif;
+         font-size:18px; line-height:1.7; color:#1a1a1a; }
+    .tc-header{ max-width:684px; margin:0 auto; padding:64px 24px 8px; }
+    .tc-eyebrow{ font-family:-apple-system,"Segoe UI",Helvetica,sans-serif;
+         font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:#888; margin-bottom:18px; }
+    .tc-title{ font-family:Georgia,serif; font-weight:700; font-size:38px; line-height:1.18;
+         letter-spacing:-.01em; margin:0 0 18px; color:#111; }
+    .tc-byline{ font-family:-apple-system,"Segoe UI",Helvetica,sans-serif; font-size:15px; color:#555; }
+    .tc-byline a{ color:#1a55b5; text-decoration:none; }
+    .tc-abstract{ font-size:19px; line-height:1.7; color:#444; font-style:italic;
+         border-left:3px solid #e2e2e2; padding-left:20px; margin:28px 0 0; }
+    .tc h2{ font-family:Georgia,serif; font-weight:700; font-size:26px; margin:2em 0 .5em; color:#111; }
+    .tc h3{ font-family:Georgia,serif; font-weight:700; font-size:20px; margin:1.6em 0 .4em; }
+    .tc p{ margin:1em 0; }
+    .tc a{ color:#1a55b5; text-decoration:none; border-bottom:1px solid #cdd9ee; }
+    .tc code{ font-family:"SF Mono",Menlo,Consolas,monospace; font-size:.85em;
+         background:#f4f4f2; padding:.1em .35em; border-radius:3px; }
+    .tc blockquote{ border-left:3px solid #d9a441; background:#fbf7ee; margin:1.6em 0;
+         padding:14px 22px; font-size:17px; color:#4a3f24; }
+    /* figures can break out wider than the text column */
+    .tc-figure{ margin:2.4em auto; text-align:center; max-width:900px; }
+    .tc-figure img{ max-width:100%; border:1px solid #ececec; border-radius:4px; }
+    .tc-figure figcaption{ font-family:-apple-system,"Segoe UI",Helvetica,sans-serif;
+         font-size:13.5px; line-height:1.55; color:#777; margin-top:12px; text-align:left;
+         max-width:684px; margin-left:auto; margin-right:auto; }
+    .tc-figure figcaption b{ color:#444; }
+    .tc-rule{ max-width:684px; margin:3em auto; border:0; border-top:1px solid #ececec; }
+    .tc-refs{ max-width:684px; margin:0 auto; padding:0 24px 80px;
+         font-family:-apple-system,"Segoe UI",Helvetica,sans-serif; font-size:14px; color:#555; }
+    .tc-refs h2{ font-family:Georgia,serif; color:#111; }
+    .tc-refs ol{ padding-left:20px; } .tc-refs li{ margin:.5em 0; }
+    .tc-back{ display:block; max-width:684px; margin:0 auto; padding:24px; font-size:14px; }
+  </style>
+  <script>
+    MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body class="tc-wrap">
+  <a class="tc-back" href="{{ '/blog/' | relative_url }}">&larr; back to blog</a>
+  <header class="tc-header">
+    <div class="tc-eyebrow">{{ page.eyebrow | default: "Interpretability" }}</div>
+    <h1 class="tc-title">{{ page.title }}</h1>
+    <div class="tc-byline">
+      {{ page.author | default: site.author }}{% if page.affiliation %}, {{ page.affiliation }}{% endif %}
+      &middot; {{ page.date | date: "%B %Y" }}
+      {% if page.doi %}&middot; <a href="https://doi.org/{{ page.doi }}">DOI: {{ page.doi }}</a>{% endif %}
+    </div>
+    {% if page.abstract %}<p class="tc-abstract">{{ page.abstract }}</p>{% endif %}
+  </header>
+  <article class="tc">
+    {{ content }}
+  </article>
+</body>
+</html>
