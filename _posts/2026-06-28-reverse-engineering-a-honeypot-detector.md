@@ -6,68 +6,68 @@ author: Md Rahinul Islam Bhuiyan
 affiliation: University of Malaya
 date: 2026-06-28
 doi: 10.5281/zenodo.20972391
-abstract: "A machine-learning detector flags a malicious smart contract — but is it reading a real signal, or a quirk of the data? We train a small transformer to catch Ethereum honeypots, then take it apart. A single run tells a tidy story: one attention head, one opcode. Two checks break that story. The lesson is methodological: single-run attention and ablation can manufacture circuits that don't survive seed variation or causal tests."
+abstract: "We train a small transformer to catch Ethereum honeypot contracts, then try to figure out what it actually learned. A single run tells a tidy story: one head, one opcode. Two checks break that story. We think the lesson generalizes: single-run attention and ablation can manufacture circuits that don't survive seed variation or a causal test."
 ---
 
-Detectors for malicious Ethereum smart contracts are usually black boxes. When one flags a contract, we cannot tell whether it found a real signal or a quirk of the data. For a security tool, that gap matters: a model that scores well by leaning on a dataset artifact will fail quietly against an adaptive attacker. So we study the question directly — not *how accurate* is the detector, but *what has it actually learned?*
+We'd like to share a small experiment on a question that comes up a lot once you start using machine learning for security: when a detector flags something, how do you know it found something real, and not a quirk of the training data?
 
-This is a small experiment in the spirit of the [Circuits](https://distill.pub/2020/circuits/) and [Transformer Circuits](https://transformer-circuits.pub/) work: pick a model small enough to take apart by hand, reverse-engineer the algorithm it has learned, and see whether the story holds up. The twist is the domain — a security classifier — and the result is partly a cautionary tale about the interpretability methods themselves.
+This started as a practical worry. A model that scores well on a benchmark can still be relying on something an attacker could simply avoid. The only way we know to check is to open the model up and look. So that's what we did, on a problem small enough to actually do this by hand: detecting honeypot smart contracts on Ethereum.
 
-## 1. A detector small enough to understand
+We want to be upfront that this is a small study (one detector, one dataset, 543 contracts) and we'd ask you to treat it the way you'd treat a colleague's preliminary results, not a finished claim. What we found was more interesting as a lesson about interpretability methods than as a claim about this particular detector.
 
-A deployed contract is a string of EVM *bytecode*, which disassembles into a sequence of opcodes from a fixed instruction set (`SSTORE`, `CALL`, `EXP`, `PUSH1`, …). We treat each contract as a token sequence and train a deliberately tiny classifier: a two-layer, four-head transformer with model dimension $d=64$, reading the label off a `[CLS]` token.
+## The setup
 
-On real on-chain data — 243 confirmed honeypots from the HoneyBadger set and 300 freshly-deployed benign contracts — it reaches test $\mathrm{F1}=0.98$. A plain bag-of-opcodes logistic regression reaches $1.00$, so the task is nearly linearly separable. We treat that as the point, not a weakness: an easy, separable task is a clean testbed for studying *how* a model decides, the same way toy models are.
+A deployed Ethereum contract is a string of bytecode, which disassembles into a sequence of opcodes (`SSTORE`, `CALL`, `EXP`, `PUSH1`, and so on, from a fixed instruction set). We treat a contract as a sequence of these tokens and train a small classifier on top, a two-layer, four-head transformer with model dimension 64, reading honeypot-or-not off a `[CLS]` token. We kept it deliberately tiny so we could take it apart.
 
-<figure class="tc-figure">
-  <img src="{{ '/assets/img/honeypot/confusion.png' | relative_url }}" alt="Confusion matrix">
-  <figcaption><b>Figure 1.</b> Test-set confusion matrix for the two-layer detector. Of 55 held-out contracts it mislabels one benign contract and no honeypots (precision 0.96, recall 1.00). The model is accurate; the question is <i>why</i>.</figcaption>
-</figure>
+On real data (243 confirmed honeypots, 300 freshly-deployed benign contracts), it gets to test F1 of 0.98. Worth noting: a plain logistic regression on opcode counts gets to 1.00. So this task is close to linearly separable, which we think is a feature rather than a bug here. It gave us a clean setting to study the interpretability methods themselves, separate from whether the underlying task is hard.
 
-## 2. The tidy story: one head
+It mislabels one contract out of 55 held out, a benign one, and catches every honeypot.
 
-We first ask which of the eight attention heads the detector relies on. For each head $(\ell,h)$ we define its importance as the drop in F1 when it is disabled:
+## A tidy story
+
+The first thing we tried was per-head ablation: disable one attention head at a time and see how much F1 drops. We define the importance of a head as
 
 $$\Delta\mathrm{F1}(\ell,h) = \mathrm{F1}(M) - \mathrm{F1}\big(M_{\setminus(\ell,h)}\big).$$
 
-On one trained model the result is strikingly sparse. Disabling head $\mathrm{L0H3}$ collapses performance ($\Delta\mathrm{F1}=0.22$, F1 falling from 0.98 to 0.76), while every other head barely matters. This looks exactly like a one-head circuit.
+On the first model we trained, this was about as clean as ablation results get. Disabling one head, L0H3, drops F1 from 0.98 to 0.76. Every other head barely moves it.
 
 <figure class="tc-figure">
   <img src="{{ '/assets/img/honeypot/ablation.png' | relative_url }}" alt="Per-head ablation importance">
-  <figcaption><b>Figure 2.</b> Per-head ablation importance for one trained model. One head (here L0H3, red) dominates and the rest are near zero — the signature of a sparse circuit.</figcaption>
 </figure>
 
-So we ask what that head reads. Averaging its attention from `[CLS]` over honeypots and benign contracts, two opcodes stand out — but only one separates the classes. `PUSH2` (jump tables) is read in both, so it carries no class information. The head reads `EXP` (exponentiation) almost only on honeypots (mean top-5 attention 0.18 vs. 0.00 on benign). `EXP` is a plausible signal: arithmetic manipulation is a known honeypot trick.
+Naturally we wanted to know what that head was reading. We averaged its attention out of `[CLS]` over honeypot and benign contracts separately. Two opcodes show up a lot, but only one of them actually tells the classes apart: `PUSH2` gets attended to in both honeypots and benign contracts (it's just used for jump tables, so it's not informative), while `EXP` gets attended to almost exclusively on honeypots. That's a plausible finding on its face. Arithmetic manipulation is a known trick in honeypot contracts.
 
 <figure class="tc-figure">
   <img src="{{ '/assets/img/honeypot/attention.png' | relative_url }}" alt="Attention by opcode and class">
-  <figcaption><b>Figure 3.</b> Mean top-5 attention of L0H3 from <code>[CLS]</code>, by opcode and class. <code>EXP</code> is read only on honeypots (discriminative); <code>PUSH2</code> is read in both (structural).</figcaption>
 </figure>
 
-Put together, this gives a clean, satisfying circuit: `EXP` is read by L0H3, which writes to the `[CLS]` stream, which the classifier maps to the honeypot logit.
+Put the two together and you get a circuit that's almost too clean: `EXP` is read by L0H3, which writes into the residual stream at `[CLS]`, which the classifier reads off to make the call.
 
 <figure class="tc-figure">
   <img src="{{ '/assets/img/honeypot/circuit.png' | relative_url }}" alt="Candidate circuit diagram">
-  <figcaption><b>Figure 4.</b> The candidate circuit from ablation and attention: <code>EXP</code> → L0H3 → <code>[CLS]</code> → honeypot logit. It is tidy, plausible, and — as we will see — not quite true.</figcaption>
 </figure>
 
-## 3. The story breaks, twice
+If we'd stopped here, this would have been a satisfying little writeup about a one-head, one-feature circuit. We almost did stop here. Two checks talked us out of it.
 
-**Check one: seeds.** We retrain and re-ablate across five seeds. The dominant head's drop is $\Delta\mathrm{F1}=0.22 \pm 0.20$, and *which* head it is changes from run to run (L0H0, L0H1, or L0H3, always in layer 0). In two of the five seeds, no head drops F1 by more than 0.02 — the model is fully redundant, with no one-head circuit at all. The clean circuit in Figure 2 is a property of *one trained model*, not of the task.
+## The first check: does it survive a different seed?
 
-**Check two: cause.** Attention is only correlation — a head reading `EXP` does not prove `EXP` *causes* the decision. We test cause with activation patching (a denoising design): take a correctly-flagged honeypot, corrupt it by replacing every `EXP` with a neutral opcode, then patch the clean activations back in at those positions and watch the prediction.
+We retrained the same model five times with different seeds and ran the same ablation each time. The dominant head's drop averaged 0.22, but with a standard deviation of 0.20, and which head was dominant moved around (L0H0, L0H1, or L0H3, depending on the run, though always in the first layer). In two of the five runs, no single head's removal dropped F1 by more than 0.02. There was no one-head circuit to find in those runs.
 
-The result is negative, and that is the point: corrupting `EXP` changes only **0.4%** of predictions. It does not depend on the edit — six different replacement opcodes all change at most 0.4%, and zeroing L0H3's attention onto `EXP` changes 0.0%. So even though L0H3 reads `EXP` and is the most important single head under ablation, the `EXP` token is **not necessary**. The detector spreads its evidence over many features.
+So the clean picture in the ablation plot above turned out to be a property of one trained model, not something we should expect of the task in general.
 
-An evasion test agrees from the attacker's side: simple semantics-preserving edits (inserting stack-neutral instructions, even targeted right before each `EXP`) fool the detector at most **0.8%** of the time. The same redundancy, seen as robustness.
+## The second check: is the head's read actually doing anything?
 
-## 4. What survives
+Attention tells you what a head looks at, not what's driving the output. To test causation directly, we used activation patching. For a correctly-flagged honeypot, we ran the model once cleanly, then again with every `EXP` token swapped for a neutral opcode, then patched the clean activations back in at exactly those positions and watched what happened to the prediction.
 
-> Single-run attention and ablation can produce a neat, plausible "circuit" that does not survive seed variation or causal tests. What is stable here is **redundancy**: no single head and no single feature is necessary.
+It barely changed anything. Corrupting `EXP` flips only 0.4% of predictions. We tried six different replacement opcodes for the corruption, all in the same range, and we also tried directly zeroing out L0H3's attention onto `EXP`, which changed 0.0% of predictions. So the head that ablation said mattered most, and that we'd shown reads `EXP` almost exclusively on honeypots, turns out not to need `EXP` to make its call. The model has the same information sitting somewhere else too.
 
-That is the methodological takeaway, and it is the part that generalizes beyond this one detector. The tools that make interpretability legible — a sparse ablation plot, an attention map pointing at a meaningful token — are exactly the tools that can manufacture a story. A security audit should trust only what survives **seed variation** and **causal intervention**, not what a single run suggests.
+This lined up with something we found from the other direction: simple edits that should fool the detector if it really depended on `EXP` (inserting neutral instructions, including right before each `EXP` token) only flip its prediction up to 0.8% of the time.
 
-None of this means the detector is untrustworthy or that interpretability failed. The opposite: interpretability is what let us catch the over-claim. A learned security detector need not be a black box — but reading it correctly is harder than it looks, and the discipline is in the checks.
+## What we think this means
+
+We'd put it this way. Single-run attention maps and single-run ablation are useful, but on their own they can hand you a circuit that looks complete and isn't. What held up across seeds and across a causal test wasn't a tidy one-head story. It was redundancy: no single head, and no single feature, turned out to be necessary.
+
+We don't think this means the detector is untrustworthy, or that the interpretability tools failed. If anything, the tools are what caught the overclaim before it became one. We just think a security audit (or a writeup like this one) should hold off on trusting a circuit until it's been checked across a few seeds and tested causally, not just read off one attention map.
 
 <hr class="tc-rule">
 
@@ -75,12 +75,12 @@ None of this means the detector is untrustworthy or that interpretability failed
 
 ## Code and data
 
-Everything here is reproducible — model, data pipeline, ablation, attention, activation patching, baselines, and figures — released openly.
+Model, data pipeline, ablation, attention, activation patching, baselines, and the figures above are all available.
 
 - **Zenodo (code + data):** [10.5281/zenodo.20972391](https://doi.org/10.5281/zenodo.20972391)
 - **Paper:** arXiv (forthcoming)
 
-## References
+## A few things we drew on
 
 1. Olah et al. *Zoom In: An Introduction to Circuits.* Distill, 2020.
 2. Elhage et al. *A Mathematical Framework for Transformer Circuits.* Anthropic, 2021.
