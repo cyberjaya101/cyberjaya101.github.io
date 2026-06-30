@@ -4,7 +4,7 @@ eyebrow: Retrieval-Augmented Generation
 title: "retrieval: an answer is only as trustworthy as its citation"
 author: Md Rahinul Islam Bhuiyan
 affiliation: University of Malaya
-date: 2026-06-30
+date: 2026-03-22
 abstract: "Retrieval-augmented generation reduces hallucination by grounding answers in real documents, but most RAG demos still hand you a paragraph of prose with no way to check it. retrieval forces every claim back to a page number, and runs entirely on a laptop."
 ---
 
