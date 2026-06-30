@@ -4,7 +4,7 @@ eyebrow: LLM Evaluation
 title: "measure: turning \"the LLM seems fine\" into a number"
 author: Md Rahinul Islam Bhuiyan
 affiliation: University of Malaya
-date: 2026-06-30
+date: 2026-05-20
 abstract: "Most teams evaluate an LLM app by reading a few outputs and deciding they look okay. We built measure because that doesn't scale and doesn't catch the failures that matter, and it's mostly an implementation of an evaluation framework that already exists in the literature, run entirely on-device."
 ---
 

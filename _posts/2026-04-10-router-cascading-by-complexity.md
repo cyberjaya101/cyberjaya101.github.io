@@ -4,7 +4,7 @@ eyebrow: LLM Infrastructure
 title: "router: most queries don't need your biggest model"
 author: Md Rahinul Islam Bhuiyan
 affiliation: University of Malaya
-date: 2026-06-30
+date: 2026-04-10
 abstract: "GPT-4-class models cost roughly sixty times more per token than the cheap tier, and most production traffic doesn't need that much model. router classifies a query's complexity first and only reaches for the expensive model when the question actually calls for it."
 ---
 

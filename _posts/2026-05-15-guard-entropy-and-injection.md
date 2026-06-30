@@ -4,7 +4,7 @@ eyebrow: AI Security
 title: "guard: catching secrets and prompt injection before they ship"
 author: Md Rahinul Islam Bhuiyan
 affiliation: University of Malaya
-date: 2026-06-30
+date: 2026-05-15
 abstract: "Two small, unrelated-looking problems (a leaked API key and a hijacked agent) turn out to share a detection strategy: look at the statistics of the string, not just its content. We built a scanner around that idea and it's mostly worked."
 ---
 
