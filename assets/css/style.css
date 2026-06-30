@@ -127,8 +127,23 @@ a { color: var(--link); }
 
 /* ---- responsive ---- */
 @media (max-width: 720px) {
-  .panel { padding: 30px 22px; margin: 18px 12px; }
-  .grid { grid-template-columns: 1fr; }
-  .header-inner { flex-direction: column; gap: 10px; }
-  .site-nav a { margin: 0 14px; }
+  /* iOS Safari handles fixed backgrounds poorly (scroll jank); use scroll attachment on phones */
+  html, body { background-attachment: scroll; }
+  .panel { padding: 24px 18px; margin: 14px 10px; }
+  .grid { grid-template-columns: 1fr; gap: 18px; }
+  .header-inner { flex-direction: column; gap: 10px; padding: 16px 18px; text-align: center; }
+  .site-nav a { margin: 0 12px; font-size: 1rem; }
+  h1 { font-size: 1.7rem; }
+  h2 { font-size: 1.3rem; }
+  .lead { font-size: 1.05rem; }
+  .card img { height: 150px; }
+  .card.flagship img { height: 170px; }
+  .proj-list .name { font-size: 1.05rem; }
+  .post-title { font-size: 1.7rem; }
+  table { display: block; overflow-x: auto; }
+}
+
+@media (max-width: 420px) {
+  .panel { padding: 18px 14px; }
+  .site-title { font-size: 1.25rem; }
 }

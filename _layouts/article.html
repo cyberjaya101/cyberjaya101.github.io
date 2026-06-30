@@ -46,6 +46,25 @@
   .tc mark{ background:#fde9b6; padding:0 .1em; border-radius:2px; }
   .tc mark.tc-hl-strong{ background:#f6c89a; }
   .tc mark.tc-hl-red{ background:#f3c6c2; }
+
+  /* ---- phone-friendly ---- */
+  @media (max-width: 680px){
+    .tc-header{ padding:36px 18px 6px; }
+    .tc{ padding:0 18px; font-size:17px; line-height:1.65; }
+    .tc-title{ font-size:28px; line-height:1.22; }
+    .tc-abstract{ font-size:17px; padding-left:14px; }
+    .tc h2{ font-size:22px; }
+    .tc h3{ font-size:18px; }
+    .tc-figure{ margin:1.8em auto; }
+    .tc-figure figcaption{ padding:0 6px; }
+    .tc-refs{ padding:0 18px 60px; }
+    .tc-back{ padding:18px; }
+    .tc blockquote{ padding:12px 16px; font-size:16px; }
+  }
+  @media (max-width: 420px){
+    .tc-title{ font-size:24px; }
+    .tc{ font-size:16px; }
+  }
   </style>
   <script>
     MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']] } };
