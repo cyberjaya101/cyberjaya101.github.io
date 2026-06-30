@@ -42,19 +42,4 @@ permalink: /projects/
       grounded responses instead of hallucinations.</div>
     <div class="links"><a href="https://github.com/cyberjaya101/retrieval">GitHub</a></div>
   </li>
-  <li>
-    <div class="name">HonestAI Network</div>
-    <div class="desc">Decentralized threat-intelligence platform for AI security incidents:
-      anonymous reporting, community validation, and defense sync.</div>
-  </li>
-  <li>
-    <div class="name">SelfHeal AI</div>
-    <div class="desc">Autonomous adversarial red-teaming that stress-tests RAG pipelines,
-      agents, and LLM apps with 20+ attack templates.</div>
-  </li>
-  <li>
-    <div class="name">AI Agent</div>
-    <div class="desc">LangGraph ReAct agent that autonomously selects and runs tools — runs
-      locally with no API keys.</div>
-  </li>
 </ul>
