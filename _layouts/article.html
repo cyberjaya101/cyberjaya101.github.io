@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ page.title }} &middot; {{ site.title }}</title>
   <meta name="description" content="{{ page.description }}">
+  <!-- script-src allows jsdelivr only for the pinned, integrity-checked MathJax file below;
+       no other external script source is permitted. See default.html for the rest of the policy. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' https://images.unsplash.com data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
   <style>
     /* ---- transformer-circuits / Distill-inspired article ---- */
@@ -69,7 +73,10 @@
   <script>
     MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']] } };
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  <!-- pinned version + Subresource Integrity: a compromised/altered CDN file will fail to execute -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" async
+    integrity="sha384-Wuix6BuhrWbjDBs24bXrjf4ZQ5aFeFWBuKkFekO2t8xFU0iNaLQfp2K6/1Nxveei"
+    crossorigin="anonymous"></script>
 </head>
 <body class="tc-wrap">
   <a class="tc-back" href="{{ '/blog/' | relative_url }}">&larr; back to blog</a>

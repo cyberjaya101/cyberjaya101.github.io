@@ -1,0 +1,3 @@
+Contact: mailto:rahin577@gmail.com
+Preferred-Languages: en
+Canonical: https://cyberjaya101.github.io/.well-known/security.txt
