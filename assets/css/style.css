@@ -105,8 +105,6 @@ a { color: var(--link); }
 .card:hover img { transform: scale(1.06); }
 .card .card-title { text-align: center; font-size: 1.25rem; font-weight: bold; margin: 16px 0 4px; }
 .card .card-sub { text-align: center; font-style: italic; color: var(--muted); font-size: .95rem; }
-.card.flagship { grid-column: 1 / -1; }
-.card.flagship img { height: 220px; object-fit: contain; padding: 16px; }
 
 /* ---- project list ---- */
 .proj-list { list-style: none; padding: 0; }
@@ -146,7 +144,6 @@ a { color: var(--link); }
   h2 { font-size: 1.3rem; }
   .lead { font-size: 1.05rem; }
   .card img { height: 150px; }
-  .card.flagship img { height: 170px; }
   .proj-list .name { font-size: 1.05rem; }
   .post-title { font-size: 1.7rem; }
   table { display: block; overflow-x: auto; }
