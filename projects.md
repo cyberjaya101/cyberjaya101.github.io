@@ -8,17 +8,6 @@ permalink: /projects/
 
 <ul class="proj-list">
   <li>
-    <div class="name">Understanding a Smart-Contract Honeypot Detector</div>
-    <div class="desc">Mechanistic-interpretability research: a small transformer detects Ethereum
-      honeypot contracts (F1 = 0.98), then per-head ablation, attention attribution, and
-      activation patching reveal that the apparent sparse "circuit" is seed-fragile and the
-      real, stable property is feature-level redundancy.</div>
-    <div class="links">
-      <a href="https://doi.org/10.5281/zenodo.20972390">Code &amp; data (Zenodo DOI)</a>
-      <a href="#">Paper (arXiv — coming soon)</a>
-    </div>
-  </li>
-  <li>
     <div class="name">guard</div>
     <div class="desc">Security scanner for AI applications — catches leaked API keys and prompt
       injection before they reach production.</div>
