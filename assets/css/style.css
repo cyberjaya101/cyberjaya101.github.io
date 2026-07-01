@@ -67,23 +67,22 @@ a { color: var(--link); }
 .panel a { text-decoration: underline; text-decoration-color: #bbb; }
 .panel a:hover { text-decoration-color: var(--ink); }
 
-/* ---- featured project grid (tall portrait cards, colah-style) ---- */
+/* ---- featured project grid (colah-style: content-sized cards, adaptive columns) ---- */
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 40px 36px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 34px 30px;
   margin: 32px 0 10px;
 }
 .card {
   border: 1px solid #222;
   border-radius: 2px;
   background: #fff;
-  padding: 30px 26px 28px;
+  padding: 24px 22px 22px;
   text-decoration: none !important;
   color: var(--ink);
   display: flex;
   flex-direction: column;
-  min-height: 640px;
   min-width: 0; /* grid items default to min-width:auto, which stops them shrinking
                    below their content's natural width and lets wide images overflow */
   transition: box-shadow .35s cubic-bezier(.22,1,.36,1),
@@ -97,9 +96,8 @@ a { color: var(--link); }
   border-color: #000;
 }
 .card .card-img-frame {
-  flex: 1;
   min-width: 0;
-  min-height: 0;
+  max-height: 260px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,7 +105,7 @@ a { color: var(--link); }
 }
 .card img {
   max-width: 100%;
-  max-height: 100%;
+  max-height: 260px;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -115,7 +113,7 @@ a { color: var(--link); }
   transition: transform .5s cubic-bezier(.22,1,.36,1);
 }
 .card:hover img { transform: scale(1.04); }
-.card .card-title { text-align: center; font-size: 1.4rem; font-weight: bold; margin: 28px 0 6px; }
+.card .card-title { text-align: center; font-size: 1.35rem; font-weight: bold; margin: 20px 0 6px; }
 .card .card-sub { text-align: center; font-style: italic; color: var(--muted); font-size: 1rem; }
 
 /* ---- project list ---- */
@@ -150,7 +148,9 @@ a { color: var(--link); }
   html, body { background-attachment: scroll; }
   .panel { padding: 24px 18px; margin: 14px 10px; }
   .grid { grid-template-columns: 1fr; gap: 24px; }
-  .card { min-height: 420px; padding: 22px 18px 20px; }
+  .card { padding: 20px 18px 18px; }
+  .card .card-img-frame { max-height: 200px; }
+  .card img { max-height: 200px; }
   .header-inner { flex-direction: column; gap: 10px; padding: 16px 18px; text-align: center; }
   .site-nav a { margin: 0 12px; font-size: 1rem; }
   h1 { font-size: 1.7rem; }
