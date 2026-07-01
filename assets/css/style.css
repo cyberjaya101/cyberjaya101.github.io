@@ -84,6 +84,8 @@ a { color: var(--link); }
   display: flex;
   flex-direction: column;
   min-height: 640px;
+  min-width: 0; /* grid items default to min-width:auto, which stops them shrinking
+                   below their content's natural width and lets wide images overflow */
   transition: box-shadow .35s cubic-bezier(.22,1,.36,1),
               transform .35s cubic-bezier(.22,1,.36,1),
               border-color .35s ease;
@@ -96,6 +98,8 @@ a { color: var(--link); }
 }
 .card .card-img-frame {
   flex: 1;
+  min-width: 0;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
