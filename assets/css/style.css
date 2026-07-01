@@ -73,6 +73,8 @@ a { color: var(--link); }
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 34px 30px;
   margin: 32px 0 10px;
+  align-items: start; /* don't stretch a card to match a taller row-mate;
+                          each card should size to its own content only */
 }
 .card {
   border: 1px solid #222;
