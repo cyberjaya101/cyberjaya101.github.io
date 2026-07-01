@@ -5,23 +5,23 @@ title: "measure: turning \"the LLM seems fine\" into a number"
 author: Md Rahinul Islam Bhuiyan
 affiliation: University of Malaya
 date: 2026-05-20
-abstract: "Most teams evaluate an LLM app by reading a few outputs and deciding they look okay. We built measure because that doesn't scale and doesn't catch the failures that matter, and it's mostly an implementation of an evaluation framework that already exists in the literature, run entirely on-device."
+abstract: "Most teams evaluate an LLM app by reading a few outputs and deciding they look okay. I built measure because that doesn't scale and doesn't catch the failures that matter, and it's mostly an implementation of an evaluation framework that already exists in the literature, run entirely on-device."
 ---
 
 A surprising number of LLM applications ship without any quantitative evaluation at all. Someone tries a handful of prompts, the answers look reasonable, and that's the bar. The problem is that the failures that actually hurt in production (a confidently wrong fact, an answer that ignores the retrieved context, a response that's technically on-topic but useless) don't show up reliably in a quick manual check. You need something closer to a test suite.
 
 ## Four numbers instead of a vibe
 
-We built `measure` around four metrics, and we didn't invent these from scratch. The framing follows RAGAS<sup>1</sup>, a reference-free evaluation framework for retrieval-augmented generation that breaks "is this answer good" into separable, checkable pieces:
+I built `measure` around four metrics, and I didn't invent these from scratch. The framing follows RAGAS<sup>1</sup>, a reference-free evaluation framework for retrieval-augmented generation that breaks "is this answer good" into separable, checkable pieces:
 
 - **Faithfulness**, whether the claims in the answer are actually supported by the retrieved context, rather than added by the model.
 - **Relevancy**, whether the answer addresses the question that was asked.
 - **Precision**, whether the answer is appropriately focused, not padded with hedging or irrelevant detail.
 - **Hallucination rate**, the fraction of stated facts that don't trace back to anything in the context.
 
-The thing we think is worth saying out loud: <mark>these four numbers are mostly orthogonal</mark>. An answer can be fully faithful to its context and still useless, because it didn't answer the question. It can be relevant and confident and still hallucinate a date or a number that isn't in the source. Treating "quality" as one scalar hides exactly the failure modes you'd want a dashboard to surface.
+The thing I think is worth saying out loud: <mark>these four numbers are mostly orthogonal</mark>. An answer can be fully faithful to its context and still useless, because it didn't answer the question. It can be relevant and confident and still hallucinate a date or a number that isn't in the source. Treating "quality" as one scalar hides exactly the failure modes you'd want a dashboard to surface.
 
-## Why we ran it on-device
+## Why I ran it on-device
 
 A lot of evaluation tooling calls out to a larger model to judge the smaller model's outputs (LLM-as-judge). That works, but it adds an API bill and a dependency to something whose whole job is catching reliability problems, which felt backwards for a tool meant to run on every commit.
 
