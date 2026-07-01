@@ -22,3 +22,4 @@ real signal or a quirk of the data?*
 
 - Email: [rahin577@gmail.com](mailto:rahin577@gmail.com)
 - GitHub: [github.com/cyberjaya101](https://github.com/cyberjaya101)
+- Resume: [download PDF]({{ '/assets/files/Rahinul_Islam_Bhuiyan_Resume.pdf' | relative_url }})
